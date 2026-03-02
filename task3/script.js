@@ -1,40 +1,73 @@
 console.log("connected");
+
 var wrongCount = 0;
 
 function getEmail() {
-  var e = document.getElementById("email").value;
-  var err = document.getElementById("emailErr");
-  err.innerHTML = e.indexOf("@") === -1 ? "Email must contain @" : "";
-  return err.innerHTML === "";
+  const email = document.getElementById("email").value;
+  if (email.indexOf("@") === -1) {
+    document.getElementById("emailErr").innerHTML = "Email must contain @";
+    return false;
+  } else {
+    document.getElementById("emailErr").innerHTML = "";
+    return true;
+  }
 }
 
 function getPassword() {
-  var p = document.getElementById("password").value;
-  var msg = (p.length < 6 ? "At least 6 characters" : "") + (p.indexOf("#") === -1 ? (p.length < 6 ? ". Must contain #" : "Password must contain #") : "");
+  const password = document.getElementById("password").value;
+  let msg = "";
+  if (password.length < 6) {
+    msg = "Password must be at least 6 characters";
+  }
+  if (password.indexOf("#") === -1) {
+    if (msg) msg += ". ";
+    msg += "Password must contain #";
+  }
   document.getElementById("pwdErr").innerHTML = msg;
   return msg === "";
 }
 
 function collectFormData() {
-  var email = document.getElementById("email").value;
-  var password = document.getElementById("password").value;
-  console.log("Printing given values...", email, password);
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  var eErr = document.getElementById("emailErr");
-  var pErr = document.getElementById("pwdErr");
-  eErr.innerHTML = "";
-  pErr.innerHTML = "";
+  console.log("Printing given values...");
+  console.log(email);
+  console.log(password);
 
-  eErr.innerHTML = !email ? "Email is required" : email.indexOf("@") === -1 ? "Email must contain @" : "";
-  var pMsg = (password.length < 6 ? "Password must be at least 6 characters" : "") + (password.indexOf("#") === -1 ? (password.length < 6 ? ". " : "") + "Password must contain #" : "");
-  pErr.innerHTML = pMsg;
+  document.getElementById("emailErr").innerHTML = "";
+  document.getElementById("pwdErr").innerHTML = "";
 
-  if (eErr.innerHTML || pMsg) {
+  let hasError = false;
+
+  if (!email) {
+    document.getElementById("emailErr").innerHTML = "Email is required";
+    hasError = true;
+  } else if (email.indexOf("@") === -1) {
+    document.getElementById("emailErr").innerHTML = "Email must contain @";
+    hasError = true;
+  }
+
+  let msg = "";
+  if (password.length < 6) {
+    msg = "Password must be at least 6 characters";
+  }
+  if (password.indexOf("#") === -1) {
+    if (msg) msg += ". ";
+    msg += "Password must contain #";
+  }
+  if (msg) {
+    document.getElementById("pwdErr").innerHTML = msg;
+    hasError = true;
+  }
+
+  if (hasError) {
     wrongCount++;
     document.getElementById("invalidCount").style.display = "block";
     document.getElementById("count").innerHTML = wrongCount;
     return false;
   }
+
   alert("Success! Form is valid.");
   return true;
 }
